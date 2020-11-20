@@ -6,9 +6,11 @@ import model.Polygon;
 import rasterize.LineRasterizer;
 import rasterize.Raster;
 import rasterize.TrivialLineRasterizer;
+import transforms.*;
 import view.Panel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class Controller2D implements Controller {
@@ -34,6 +36,16 @@ public class Controller2D implements Controller {
 //        for (int x = 100; x <= 300; x++) {
 //            raster.setPixel(x, x, 0x00ffff);
 //        }
+
+//        Point2D p1 = new Point2D(10, 20);
+//        Point2D p2 = new Point2D(100, 50);
+//        trivialLineRasterizer.rasterize((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY(), Color.RED.getRGB());
+//
+////        Mat3 mat = new Mat3Transl2D(0, 20);
+//        Mat3 mat = new Mat3Transl2D(-10, -20).mul(new Mat3Scale2D(3)).mul(new Mat3Transl2D(10, 20));
+//        p1 = p1.mul(mat);
+//        p2 = p2.mul(mat);
+//        trivialLineRasterizer.rasterize((int) p1.getX(), (int) p1.getY(), (int) p2.getX(), (int) p2.getY(), Color.GREEN.getRGB());
     }
 
     private void initObjects(Raster raster) {

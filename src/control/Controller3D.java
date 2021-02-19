@@ -11,7 +11,7 @@ import java.awt.*;
 public class Controller3D  {
 
     private final GPURenderer renderer;
-    private final Raster imageBuffer;
+    private final Raster<Integer> imageBuffer;
     private final Panel panel;
 
     private Mat4 model, projection;
@@ -26,7 +26,7 @@ public class Controller3D  {
         initListeners(panel);
 
         // test draw
-        imageBuffer.setPixel(50, 50, Color.YELLOW.getRGB());
+        imageBuffer.setElement(50, 50, Color.YELLOW.getRGB());
         panel.repaint();
     }
 

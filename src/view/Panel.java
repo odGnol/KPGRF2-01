@@ -15,7 +15,7 @@ public class Panel extends JPanel {
     Panel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         imageBuffer = new RasterBufferedImage(WIDTH, HEIGHT);
-        imageBuffer.setClearColor(Color.BLACK.getRGB());
+        imageBuffer.setClearValue(Color.BLACK.getRGB());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class Panel extends JPanel {
         imageBuffer.clear();
     }
 
-    public Raster getImageBuffer() {
+    public Raster<Integer> getImageBuffer() {
         return imageBuffer;
     }
 

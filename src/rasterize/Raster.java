@@ -1,6 +1,8 @@
 package rasterize;
 
-public interface Raster {
+import java.util.Optional;
+
+public interface Raster<T> {
 
     /**
      * Clear canvas
@@ -8,11 +10,11 @@ public interface Raster {
     void clear();
 
     /**
-     * Set clear color
+     * Set clear value
      *
-     * @param clearColor clear color
+     * @param clearValue clear value
      */
-    void setClearColor(int clearColor);
+    void setClearValue(T clearValue);
 
     /**
      * Get horizontal size
@@ -29,21 +31,21 @@ public interface Raster {
     int getHeight();
 
     /**
-     * Get pixel color at [x,y] position
+     * Get value at [x,y] position
      *
      * @param x horizontal coordinate
      * @param y vertical coordinate
-     * @return pixel color
+     * @return value
      */
-    int getPixel(int x, int y);
+    Optional<T> getElement(int x, int y);
 
     /**
-     * Set pixel color at [x,y] position
+     * Set value at [x,y] position
      *
      * @param x     horizontal coordinate
      * @param y     vertical coordinate
-     * @param color pixel color
+     * @param value value
      */
-    void setPixel(int x, int y, int color);
+    void setElement(int x, int y, T value);
 
 }

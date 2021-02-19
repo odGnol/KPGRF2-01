@@ -7,11 +7,11 @@ import transforms.Vec3D;
 
 public class Renderer3D implements GPURenderer {
 
-    private final Raster raster;
+    private final Raster<Integer> raster;
 
     private Mat4 model, view, projection;
 
-    public Renderer3D(Raster raster) {
+    public Renderer3D(Raster<Integer> raster) {
         this.raster = raster;
 
         model = new Mat4Identity();

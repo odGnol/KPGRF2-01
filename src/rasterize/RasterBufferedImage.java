@@ -2,8 +2,9 @@ package rasterize;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
-public class RasterBufferedImage implements Raster {
+public class RasterBufferedImage implements Raster<Integer> {
 
     private final BufferedImage img;
     private int clearColor;
@@ -33,12 +34,16 @@ public class RasterBufferedImage implements Raster {
     }
 
     @Override
-    public int getPixel(int x, int y) {
-        return img.getRGB(x, y);
+    public Optional<Integer> getElement(int x, int y) {
+        if (x >= 0 && y >= 0 && x < getWidth() && y < getHeight()) {
+            return Optional.of(img.getRGB(x, y));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public void setPixel(int x, int y, int color) {
+    public void setElement(int x, int y, Integer color) {
         img.setRGB(x, y, color);
     }
 
@@ -50,7 +55,7 @@ public class RasterBufferedImage implements Raster {
     }
 
     @Override
-    public void setClearColor(int clearColor) {
+    public void setClearValue(Integer clearColor) {
         this.clearColor = clearColor;
     }
 

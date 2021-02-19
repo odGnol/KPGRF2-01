@@ -1,59 +1,67 @@
 package control;
 
-import model3d.Cube;
-import model3d.Scene;
 import rasterize.Raster;
 import renderer.GPURenderer;
 import renderer.Renderer3D;
 import transforms.*;
 import view.Panel;
 
-public class Controller3D implements Controller {
+import java.awt.*;
 
-    private GPURenderer renderer;
-    private Raster raster;
+public class Controller3D  {
 
-    private Mat4 projection;
+    private final GPURenderer renderer;
+    private final Raster imageBuffer;
+    private final Panel panel;
+
+    private Mat4 model, projection;
     private Camera camera;
 
-    private Scene mainScene, axisScene;
-
     public Controller3D(Panel panel) {
-        renderer = new Renderer3D(panel.getRaster());
-        raster = panel.getRaster();
+        this.panel = panel;
+        this.imageBuffer = panel.getImageBuffer();
+        this.renderer = new Renderer3D(panel.getImageBuffer());
+
+        initMatrices();
         initListeners(panel);
 
+        // test draw
+        imageBuffer.setPixel(50, 50, Color.YELLOW.getRGB());
+        panel.repaint();
+    }
+
+    private void initMatrices() {
+        model = new Mat4Identity();
+
+        Vec3D e = new Vec3D(1, -5, 2);
         camera = new Camera()
-                .withPosition(new Vec3D(1, -5, 2))
+                .withPosition(e)
                 .withAzimuth(Math.toRadians(90))
                 .withZenith(Math.toRadians(-15));
 
         projection = new Mat4PerspRH(
                 Math.PI / 3,
-                raster.getHeight() / (float) raster.getWidth(),
-                0.1, 50
+                imageBuffer.getHeight() / (float) imageBuffer.getWidth(),
+                0.5,
+                50
         );
-
-//        new Mat4OrthoRH(20, 20, 0.1, 50);
-
-        mainScene = new Scene();
-        mainScene.getSolids().add(new Cube());
     }
 
     private void display() {
-        raster.clear();
+        panel.clear();
+        renderer.clear();
 
-//        renderer.setModel();
+        renderer.setModel(model);
         renderer.setView(camera.getViewMatrix());
         renderer.setProjection(projection);
-        renderer.draw(mainScene);
 
-//        renderer.setModel(new Mat4Identity());
-//        renderer.draw(axisScene);
+//        renderer.draw();
+
+        // necessary to manually request update of the UI
+        panel.repaint();
     }
 
-    @Override
-    public void initListeners(Panel panel) {
+    private void initListeners(Panel panel) {
         // TODO
     }
 

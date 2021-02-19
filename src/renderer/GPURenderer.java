@@ -1,11 +1,12 @@
 package renderer;
 
-import model3d.Scene;
 import transforms.Mat4;
 
 public interface GPURenderer {
 
-    void draw(Scene scene);
+    void draw();
+
+    void clear();
 
     void setModel(Mat4 model);
 

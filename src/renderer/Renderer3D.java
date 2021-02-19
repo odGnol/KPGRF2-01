@@ -93,7 +93,7 @@ public class Renderer3D implements GPURenderer {
         if (a.getZ() < 0) {
             // A.Z je menší než nula => všechny Z jsou menší než nula => není co zobrazit
         } else if (b.getZ() < 0) {
-            // vidím jen vrchol A
+            // vrchol A je vidět, vrcholy B,C nejsou
             double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
             // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
             Vertex ab = a.mul(1 - t1).add(b.mul(t1));
@@ -125,6 +125,7 @@ public class Renderer3D implements GPURenderer {
         Optional<Vertex> dB = b.dehomog();
         Optional<Vertex> dC = c.dehomog();
 
+        // zahodit trojúhelník, pokud některý vrchol má w==0 (nelze provést dehomogenizaci)
         if (dA.isEmpty() || dB.isEmpty() || dC.isEmpty()) return;
 
         Vertex v1 = dA.get();
@@ -212,7 +213,7 @@ public class Renderer3D implements GPURenderer {
 
     @Override
     public void clear() {
-
+        depthBuffer.clear();
     }
 
     @Override

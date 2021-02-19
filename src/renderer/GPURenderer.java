@@ -1,10 +1,14 @@
 package renderer;
 
+import model.Part;
+import model.Vertex;
 import transforms.Mat4;
+
+import java.util.List;
 
 public interface GPURenderer {
 
-    void draw();
+    void draw(List<Part> parts, List<Integer> ib, List<Vertex> vb);
 
     void clear();
 

@@ -44,7 +44,9 @@ public class RasterBufferedImage implements Raster<Integer> {
 
     @Override
     public void setElement(int x, int y, Integer color) {
-        img.setRGB(x, y, color);
+        if (x >= 0 && y >= 0 && x < getWidth() && y < getHeight()) {
+            img.setRGB(x, y, color);
+        }
     }
 
     @Override

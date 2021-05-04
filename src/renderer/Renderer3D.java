@@ -61,11 +61,12 @@ public class Renderer3D implements GPURenderer {
         // 2. ořezání
         // ořezat trojúhelníky, které jsou CELÉ mimo zobrazovací objem
         // slide 93
+        // pokud nastane nějaký problém, komentovat zde
         if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return; // trojúhelník je moc vpravo
         if (a.getX() < -a.getW() && b.getX() < -b.getW() && c.getX() < -c.getW()) return; // moc vlevo
         // TODO Y
-        if (a.getZ() > a.getW() && b.getZ() > b.getW() && c.getZ() > c.getW()) return;
-        if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return;
+        if (a.getZ() > a.getW() && b.getZ() > b.getW() && c.getZ() > c.getW()) return; // daleko od nás
+        if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return; // blízko od nás
 
         // 3. seřazení podle Z
         // slide 97
@@ -162,6 +163,7 @@ public class Renderer3D implements GPURenderer {
         // 4. interpolace podle Y
         // slide 125
         // 1. for cyklus A->B
+
         int yStart = Math.max(0, (int) aa.getY() + 1);
         double yEnd = Math.min(raster.getHeight() - 1, bb.getY());
         for (int y = yStart; y <= yEnd; y++) {

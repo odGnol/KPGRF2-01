@@ -9,10 +9,13 @@ import renderer.Renderer3D;
 import transforms.*;
 import view.Panel;
 
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Controller3D  {
+public class Controller3D {
 
     private final GPURenderer renderer;
     private final Raster<Integer> imageBuffer;
@@ -43,62 +46,72 @@ public class Controller3D  {
 //        panel.repaint();
     }
 
-    private void display() {
-        panel.clear();
-        renderer.clear();
+        private void display() {
+            panel.clear();
+            renderer.clear();
 
-        renderer.setModel(model);
-        renderer.setView(camera.getViewMatrix());
-        renderer.setProjection(projection);
+            renderer.setModel(model);
+            renderer.setView(camera.getViewMatrix());
+            renderer.setProjection(projection);
 
 //        renderer.draw();
 //        renderer.draw(partBuffer, indexBuffer, vertexBuffer);
 
-        // necessary to manually request update of the UI
-        panel.repaint();
+            // necessary to manually request update of the UI
+            panel.repaint();
+        }
+
+        private void initMatrices() {
+            model = new Mat4Identity();
+
+            Vec3D e = new Vec3D(1, -5, 2);
+            camera = new Camera()
+                    .withPosition(e)
+                    .withAzimuth(Math.toRadians(90))
+                    .withZenith(Math.toRadians(-15));
+
+            projection = new Mat4PerspRH(
+                    Math.PI / 3,
+                    imageBuffer.getHeight() / (float) imageBuffer.getWidth(),
+                    0.5,
+                    50
+            );
+        }
+
+        private void initListeners(Panel panel){
+            // TODO: doplnit posluchače
+            panel.addKeyListener(
+                    new KeyAdapter() {
+                        public void keyPressed(KeyEvent e) {
+                            if(e.getKeyCode() == KeyEvent.VK_C) {
+                                display();
+                                renderer.draw(partBuffer, indexBuffer, vertexBuffer);
+                            }
+                        }
+                    }
+            );
+        }
+
+        private void initBuffers() {
+            vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
+            vertexBuffer.add(new Vertex(new Point3D(10, 10, 2), new Col(0, 125, 0)));
+            vertexBuffer.add(new Vertex(new Point3D(-2, 6, -4), new Col(255, 125, 200)));
+            vertexBuffer.add(new Vertex(new Point3D(5, 7, -2), new Col(0, 125, 200)));
+
+            // 1 trojúhelník
+            indexBuffer.add(1);
+            indexBuffer.add(2);
+            indexBuffer.add(3);
+
+            // 2 úsečky
+            indexBuffer.add(0);
+            indexBuffer.add(3);
+            indexBuffer.add(0);
+            indexBuffer.add(1);
+
+            partBuffer.add(new Part(TopologyType.TRIANGLE, 0, 1));
+            partBuffer.add(new Part(TopologyType.LINE, 3, 2));
+
+        }
+
     }
-
-    private void initMatrices() {
-        model = new Mat4Identity();
-
-        Vec3D e = new Vec3D(1, -5, 2);
-        camera = new Camera()
-                .withPosition(e)
-                .withAzimuth(Math.toRadians(90))
-                .withZenith(Math.toRadians(-15));
-
-        projection = new Mat4PerspRH(
-                Math.PI / 3,
-                imageBuffer.getHeight() / (float) imageBuffer.getWidth(),
-                0.5,
-                50
-        );
-    }
-
-    private void initListeners(Panel panel) {
-        // TODO
-    }
-
-    private void initBuffers() {
-        vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(10, 10, 6), new Col(0, 125, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(-2, 6, -4), new Col(255, 125, 200)));
-        vertexBuffer.add(new Vertex(new Point3D(5, 7, -2), new Col(0, 125, 200)));
-
-        // 1 trojúhelník
-        indexBuffer.add(1);
-        indexBuffer.add(2);
-        indexBuffer.add(3);
-
-        // 2 úsečky
-        indexBuffer.add(0);
-        indexBuffer.add(3);
-        indexBuffer.add(0);
-        indexBuffer.add(1);
-
-        partBuffer.add(new Part(TopologyType.TRIANGLE, 0, 1));
-        partBuffer.add(new Part(TopologyType.LINE, 3, 2));
-
-    }
-
-}

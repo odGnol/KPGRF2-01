@@ -64,7 +64,11 @@ public class Renderer3D implements GPURenderer {
         // pokud nastane nějaký problém, komentovat zde
         if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return; // trojúhelník je moc vpravo
         if (a.getX() < -a.getW() && b.getX() < -b.getW() && c.getX() < -c.getW()) return; // moc vlevo
-        // TODO Y
+
+        // doplněno TODO Y
+        if (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) return;
+        if (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) return;
+
         if (a.getZ() > a.getW() && b.getZ() > b.getW() && c.getZ() > c.getW()) return; // daleko od nás
         if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return; // blízko od nás
 

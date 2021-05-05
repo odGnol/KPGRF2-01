@@ -111,7 +111,6 @@ public class Controller3D {
 
             partBuffer.add(new Part(TopologyType.TRIANGLE, 0, 1));
             partBuffer.add(new Part(TopologyType.LINE, 3, 2));
-
         }
 
     }

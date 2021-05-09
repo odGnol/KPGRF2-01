@@ -4,6 +4,7 @@ import model.Part;
 import model.TopologyType;
 import model.Vertex;
 import rasterize.DepthBuffer;
+import rasterize.LineRasterizerGraphics;
 import rasterize.Raster;
 import transforms.*;
 
@@ -48,8 +49,82 @@ public class Renderer3D implements GPURenderer {
 
             } else if (topologyType == TopologyType.LINE) {
                 // TODO
+//                for (int i = index; i < index + count * 2; i++) {
+//                    Integer i1 = ib.get(i);
+//                    Integer i2 = ib.get(i + 1);
+//
+//                    Vertex v1 = vb.get(i1);
+//                    Vertex v2 = vb.get(i2);
+//                    rasterize.rasterize();
+//                }
+
             } // ...
         }
+    }
+
+    private void prepareLine(Vertex v1, Vertex v2) {
+        // 1. transformace vrcholů
+        Vertex a = new Vertex(v1.getPoint().mul(model).mul(view).mul(projection), v1.getColor());
+        Vertex b = new Vertex(v2.getPoint().mul(model).mul(view).mul(projection), v2.getColor());
+
+        // 2. ořezání
+        // ořezat úsečky
+        if (a.getX() > a.getW() && b.getX() > b.getW()) return; // trojúhelník je moc vpravo
+        if (a.getX() < -a.getW() && b.getX() < -b.getW()) return; // moc vlevo
+
+        if (a.getY() < -a.getW() && b.getY() < -b.getW()) return;
+        if (a.getY() > a.getW() && b.getY() > b.getW()) return;
+
+        if (a.getZ() > a.getW() && b.getZ() > b.getW()) return; // daleko od nás
+        if (a.getZ() < 0 && b.getZ() < 0) return; // blízko od nás
+
+        // 3. seřazení podle Z
+        // slide 97
+        if (a.getZ() < b.getZ()) {
+            Vertex temp = a;
+            a = b;
+            b = temp;
+        }
+        //  promyslet TODO
+        if (a.getZ() < b.getZ()) {
+            Vertex temp = a;
+            a = b;
+            b = temp;
+        }
+        // teď máme seřazeno - Z od největšího po nejmenší: A, B, C
+
+        // 4. ořezání podle hrany Z
+        // slide 97
+        if (a.getZ() < 0) {
+            // A.Z je menší než nula => všechny Z jsou menší než nula => není co zobrazit
+        } else if (b.getZ() < 0) {
+            // vrchol A je vidět, vrcholy B,C nejsou
+            double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
+            // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
+            Vertex ab = a.mul(1 - t1).add(b.mul(t1));
+
+//            double t2 = -a.getZ() / (c.getZ() - a.getZ());
+//            Vertex ac = a.mul(1 - t2).add(c.mul(t2));
+
+            drawLine(a, ab);
+
+//        } else if (c.getZ() < 0) {
+//            double t1 = -a.getZ() / (c.getZ() - a.getZ());
+//            Vertex ac = a.mul(1 - t1).add(c.mul(t1));
+//
+//            double t2 = -b.getZ() / (c.getZ() - b.getZ());
+//            Vertex bc = b.mul(1 - t2).add(c.mul(t2));
+//
+//            drawTriangle(a, b, bc);
+//            drawTriangle(a, ac, bc);
+
+        } else {
+            // vidím celou úsečku
+            drawLine(a, b);
+        }
+    }
+
+    private void drawLine(Vertex a, Vertex ab) {
     }
 
     private void prepareTriangle(Vertex v1, Vertex v2, Vertex v3) {
@@ -65,7 +140,6 @@ public class Renderer3D implements GPURenderer {
         if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return; // trojúhelník je moc vpravo
         if (a.getX() < -a.getW() && b.getX() < -b.getW() && c.getX() < -c.getW()) return; // moc vlevo
 
-        // doplněno TODO Y
         if (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) return;
         if (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) return;
 

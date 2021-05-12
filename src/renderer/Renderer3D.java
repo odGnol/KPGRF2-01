@@ -4,7 +4,6 @@ import model.Part;
 import model.TopologyType;
 import model.Vertex;
 import rasterize.DepthBuffer;
-import rasterize.LineRasterizerGraphics;
 import rasterize.Raster;
 import transforms.*;
 
@@ -48,17 +47,17 @@ public class Renderer3D implements GPURenderer {
 
 
             } else if (topologyType == TopologyType.LINE) {
-                // TODO
-//                for (int i = index; i < index + count * 2; i++) {
-//                    Integer i1 = ib.get(i);
-//                    Integer i2 = ib.get(i + 1);
-//
-//                    Vertex v1 = vb.get(i1);
-//                    Vertex v2 = vb.get(i2);
-//                    rasterize.rasterize();
-//                }
+                // doplněno
+                for (int i = index; i < index + count * 2; i += 2) {
+                    int i1 = ib.get(i);
+                    int i2 = ib.get(i + 1);
 
-            } // ...
+                    Vertex v1 = vb.get(i1);
+                    Vertex v2 = vb.get(i2);
+                    prepareLine(v1, v2);
+                }
+
+            }
         }
     }
 
@@ -85,13 +84,6 @@ public class Renderer3D implements GPURenderer {
             a = b;
             b = temp;
         }
-        //  promyslet TODO
-//        if (a.getZ() < b.getZ()) {
-//            Vertex temp = a;
-//            a = b;
-//            b = temp;
-//        }
-        // teď máme seřazeno - Z od největšího po nejmenší: A, B, C
 
         // 4. ořezání podle hrany Z
         // slide 97
@@ -99,25 +91,18 @@ public class Renderer3D implements GPURenderer {
             return;
             // A.Z je menší než nula => všechny Z jsou menší než nula => není co zobrazit
         } else if (b.getZ() < 0) {
-            // vrchol A je vidět, vrcholy B,C nejsou
+            // vrchol A je vidět, vrchol B není
             double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
             // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
-//            Vertex ab = a.mul(1 - t1).add(b.mul(t1));
 
             double t2 = (0 - a.getZ()) / (b.getZ() - a.getZ());
-            Vertex ab = a.mul(1 - t2).add(b.mul(t2));
+            Vertex vb = a.mul(t2).add(b.mul(1 - t2));
 
-            drawLine(a, b);
+            Vertex mulA = a.mul(t1);
+            Vertex mulB = b.mul(1 - t1);
+            Vertex va = mulA.add(mulB);
 
-//        } else if (c.getZ() < 0) {
-//            double t1 = -a.getZ() / (c.getZ() - a.getZ());
-//            Vertex ac = a.mul(1 - t1).add(c.mul(t1));
-//
-//            double t2 = -b.getZ() / (c.getZ() - b.getZ());
-//            Vertex bc = b.mul(1 - t2).add(c.mul(t2));
-//
-//            drawTriangle(a, b, bc);
-//            drawTriangle(a, ac, bc);
+            drawLine(va, vb);
 
         } else {
             // vidím celou úsečku
@@ -126,13 +111,13 @@ public class Renderer3D implements GPURenderer {
     }
 
     private void drawLine(Vertex a, Vertex b) {
-        //TODO promyslet
+        //doplněno
 
         // 1. dehomogenizace
         Optional<Vertex> dA = a.dehomog();
         Optional<Vertex> dB = b.dehomog();
 
-        // zahodit trojúhelník, pokud některý vrchol má w==0 (nelze provést dehomogenizaci)
+        // zahodit úsečku, pokud některý vrchol má w==0 (nelze provést dehomogenizaci)
         if (dA.isEmpty() || dB.isEmpty()) return;
 
         Vertex v1 = dA.get();
@@ -147,39 +132,44 @@ public class Renderer3D implements GPURenderer {
 
 
         // 3. seřazení podle Y
-        if (aa.getY() > bb.getY()) {
-            Vertex temp = aa;
-            aa = bb;
-            bb = temp;
+
+        double dx = Math.abs(b.getX() - a.getX());
+        double dy = Math.abs(b.getY() - a.getY());
+        double k = dx / dy;
+
+        if (k < 1) {
+            if (aa.getY() > bb.getY()) {
+                Vertex temp = aa;
+                aa = bb;
+                bb = temp;
+            }
+
+            //
+
+            int yStart = Math.max(0, (int) aa.getY() + 1);
+            double yEnd = Math.min(raster.getHeight() - 1, bb.getY());
+            for (int y = yStart; y <= yEnd; y++) {
+                double t1 = (y - aa.getY()) / (bb.getY() - aa.getY());
+                Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
+
+                drawPixel((int) aa.getX(), (int) aa.getY(), aa.getW(), aa.getColor());
+            }
+        } else {
+            if (aa.getX() > bb.getX()) {
+                Vertex temp = aa;
+                aa = bb;
+                bb = temp;
+            }
+
+            int xStart = Math.max(0, (int) aa.getX() + 1);
+            double xEnd = Math.min(raster.getHeight() - 1, bb.getX());
+            for (int x = xStart; x <= xEnd; x++) {
+                double t1 = (x - aa.getX()) / (bb.getX() - aa.getX());
+                Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
+
+                drawPixel((int) aa.getX(), (int) aa.getY(), aa.getW(), aa.getColor());
+            }
         }
-//        if (bb.getY() > cc.getY()) {
-//            Vertex temp = bb;
-//            bb = cc;
-//            cc = temp;
-//        }
-        if (aa.getY() > bb.getY()) {
-            Vertex temp = aa;
-            aa = bb;
-            bb = temp;
-        }
-
-        // 4. interpolace podle Y
-        // slide 125
-        // 1. for cyklus A->B
-
-        int yStart = Math.max(0, (int) aa.getY() + 1);
-        double yEnd = Math.min(raster.getHeight() - 1, bb.getY());
-        for (int y = yStart; y <= yEnd; y++) {
-            double t1 = (y - aa.getY()) / (bb.getY() - aa.getY());
-            Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
-
-//            double t2 = (y - aa.getY()) / (cc.getY() - aa.getY());
-//            Vertex e = aa.mul(1 - t2).add(cc.mul(t2));
-//            fillLine(d, e);
-        }
-
-        // 2. for cyklus B->C
-        // TODO
     }
 
 
@@ -315,11 +305,11 @@ public class Renderer3D implements GPURenderer {
         double endBC = Math.min(raster.getWidth() - 1, cc.getY());
 
         for (int y = startBC; y <= endBC; y++) {
-            double t1 = (y - bb.getY()/bb.getY() - cc.getY());
+            double t1 = (y - bb.getY() / bb.getY() - cc.getY());
             Vertex d = cc.mul(1 - t1).add(bb.mul(t1));
 
-            double t2 = (y - bb.getY()/(aa.getY() - cc.getY()));
-            Vertex e = cc.mul(1- t2).add(aa.mul(t2));
+            double t2 = (y - bb.getY() / (aa.getY() - cc.getY()));
+            Vertex e = cc.mul(1 - t2).add(aa.mul(t2));
             fillLine(d, e);
         }
     }
@@ -355,7 +345,7 @@ public class Renderer3D implements GPURenderer {
                 .mul(new Vec3D(1, -1, 1)) // Y jde nahoru a my chceme, aby šlo dolů
                 .add(new Vec3D(1, 1, 0)) // (0,0) je uprostřed a my chceme, aby bylo vlevo nahoře
                 .mul(new Vec3D(raster.getWidth() / 2f, raster.getHeight() / 2f, 1));
-                // máme <0;2> -> vynásobíme polovinou velikosti plátna
+        // máme <0;2> -> vynásobíme polovinou velikosti plátna
     }
 
     @Override

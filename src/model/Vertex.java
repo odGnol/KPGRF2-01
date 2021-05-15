@@ -26,11 +26,7 @@ public class Vertex {
 
     public Optional<Vertex> dehomog() {
         Optional<Vec3D> optional = point.dehomog();
-        if (optional.isPresent()) {
-            return Optional.of(new Vertex(new Point3D(optional.get()), color));
-        } else {
-            return Optional.empty();
-        }
+        return optional.map(vec3D -> new Vertex(new Point3D(vec3D), color));
     }
 
     public Point3D getPoint() {

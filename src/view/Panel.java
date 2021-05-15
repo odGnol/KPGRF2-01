@@ -10,7 +10,7 @@ public class Panel extends JPanel {
 
     private RasterBufferedImage imageBuffer;
 
-    private static final int WIDTH = 1200, HEIGHT = 800;
+    private static final int WIDTH = 800, HEIGHT = 600;
 
     Panel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -39,5 +39,4 @@ public class Panel extends JPanel {
     public Raster<Integer> getImageBuffer() {
         return imageBuffer;
     }
-
 }

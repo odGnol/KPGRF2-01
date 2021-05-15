@@ -48,7 +48,7 @@ public class Renderer3D implements GPURenderer {
 
             } else if (topologyType == TopologyType.LINE) {
                 // doplněno
-                for (int i = index; i < index + count * 2; i += 2) {
+                for (int i = index; i < index + count; i += 2) {
                     int i1 = ib.get(i);
                     int i2 = ib.get(i + 1);
 
@@ -143,8 +143,6 @@ public class Renderer3D implements GPURenderer {
                 aa = bb;
                 bb = temp;
             }
-
-            //
 
             int yStart = Math.max(0, (int) aa.getY() + 1);
             double yEnd = Math.min(raster.getHeight() - 1, bb.getY());

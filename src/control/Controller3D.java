@@ -10,8 +10,7 @@ import transforms.*;
 import view.Panel;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +20,13 @@ public class Controller3D {
     private final Raster<Integer> imageBuffer;
     private final Panel panel;
 
-    private final List<Part> partBuffer;
-    private final List<Integer> indexBuffer;
-    private final List<Vertex> vertexBuffer;
+    private List<Part> partBuffer;
+    private List<Integer> indexBuffer;
+    private List<Vertex> vertexBuffer;
 
     private Mat4 model, projection;
     private Camera camera;
-    private final int posun = 2;
+    private final double posun = 0.1;
 
     public Controller3D(Panel panel) {
         this.panel = panel;
@@ -42,9 +41,6 @@ public class Controller3D {
         initListeners(panel);
         initBuffers();
 
-//        // test draw
-//        imageBuffer.setElement(50, 50, Color.YELLOW.getRGB());
-//        panel.repaint();
     }
 
     private void display() {
@@ -54,9 +50,7 @@ public class Controller3D {
         renderer.setModel(model);
         renderer.setView(camera.getViewMatrix());
         renderer.setProjection(projection);
-
-//        renderer.draw();
-//        renderer.draw(partBuffer, indexBuffer, vertexBuffer);
+        renderer.draw(partBuffer, indexBuffer, vertexBuffer);
 
         // necessary to manually request update of the UI
         panel.repaint();
@@ -80,36 +74,29 @@ public class Controller3D {
     }
 
     private void initListeners(Panel panel) {
-        // částečně doplněno
         panel.addKeyListener(
                 new KeyAdapter() {
                     public void keyPressed(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_C) {
+                            imageBuffer.setElement(400, 300, Color.YELLOW.getRGB());
+                            panel.repaint();
+                        } else if (e.getKeyCode() == KeyEvent.VK_E) {
+                            partBuffer = new ArrayList<>();
+                            indexBuffer = new ArrayList<>();
+                            vertexBuffer = new ArrayList<>();
                             display();
-                            renderer.draw(partBuffer, indexBuffer, vertexBuffer);
-                        }
-                        if (e.getKeyCode() == KeyEvent.VK_E) {
-                            display();
-                        }
-                        if (e.getKeyCode() == KeyEvent.VK_W) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_W) {
                             camera = camera.up(posun);
                             display();
-                            renderer.draw(partBuffer, indexBuffer, vertexBuffer);
-                        }
-                        if (e.getKeyCode() == KeyEvent.VK_S) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_S) {
                             camera = camera.down(posun);
                             display();
-                            renderer.draw(partBuffer, indexBuffer, vertexBuffer);
-                        }
-                        if (e.getKeyCode() == KeyEvent.VK_A) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_A) {
                             camera = camera.left(posun);
                             display();
-                            renderer.draw(partBuffer, indexBuffer, vertexBuffer);
-                        }
-                        if (e.getKeyCode() == KeyEvent.VK_D) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_D) {
                             camera = camera.right(posun);
                             display();
-                            renderer.draw(partBuffer, indexBuffer, vertexBuffer);
                         }
                     }
                 }
@@ -117,44 +104,22 @@ public class Controller3D {
     }
 
     private void initBuffers() {
-//        vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(10, 10, 2), new Col(0, 125, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(-2, 6, -4), new Col(255, 125, 200)));
-        vertexBuffer.add(new Vertex(new Point3D(7, 7, -2), new Col(0, 125, 200)));
-//        vertexBuffer.add(new Vertex(new Point3D(8, 10, -90), new Col(0, 40, 180)));
-
-        vertexBuffer.add(new Vertex(new Point3D(0, 0, 0), new Col(255, 255, 255)));
-        vertexBuffer.add(new Vertex(new Point3D(2, 0, 0), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(0, 2, 0), new Col(0, 255, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(0, 0, 2), new Col(0, 0, 255)));
-
-
-        // 1 trojúhelník
-        indexBuffer.add(1);
-        indexBuffer.add(2);
-        indexBuffer.add(3);
-
-        // 3 a více úseček
-//        indexBuffer.add(0);
-//        indexBuffer.add(3);
-//        indexBuffer.add(0);
-//        indexBuffer.add(1);
-//        indexBuffer.add(0);
-//        indexBuffer.add(4);
+        vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
+        vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));  //1
+        vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0))); //2
+        vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255))); //3
 
         //osy
         indexBuffer.add(0);
         indexBuffer.add(1);
-
         indexBuffer.add(0);
         indexBuffer.add(2);
-
         indexBuffer.add(0);
         indexBuffer.add(3);
 
-        partBuffer.add(new Part(TopologyType.TRIANGLE, 0, 1));
-//        partBuffer.add(new Part(TopologyType.LINE, 3, 2));
         partBuffer.add(new Part(TopologyType.LINE, 0, 2));
+
+        System.out.println(vertexBuffer);
     }
 
 }

@@ -78,26 +78,28 @@ public class Controller3D {
                 new KeyAdapter() {
                     public void keyPressed(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_C) {
-                            imageBuffer.setElement(400, 300, Color.YELLOW.getRGB());
-                            panel.repaint();
+//                            imageBuffer.setElement(400, 300, Color.YELLOW.getRGB());
+//                            panel.repaint();
+                            initBuffers();
                         } else if (e.getKeyCode() == KeyEvent.VK_E) {
                             partBuffer = new ArrayList<>();
                             indexBuffer = new ArrayList<>();
                             vertexBuffer = new ArrayList<>();
-                            display();
+
                         } else if (e.getKeyCode() == KeyEvent.VK_S) {
                             camera = camera.up(posun);
-                            display();
+
                         } else if (e.getKeyCode() == KeyEvent.VK_W) {
                             camera = camera.down(posun);
-                            display();
+
                         } else if (e.getKeyCode() == KeyEvent.VK_D) {
                             camera = camera.left(posun);
-                            display();
+
                         } else if (e.getKeyCode() == KeyEvent.VK_A) {
                             camera = camera.right(posun);
-                            display();
+
                         }
+                        display();
                     }
                 }
         );
@@ -109,6 +111,8 @@ public class Controller3D {
         vertexBuffer.add(new Vertex(new Point3D(0, 400, 0), new Col(0, 255, 0))); //2
         vertexBuffer.add(new Vertex(new Point3D(0, 0, 400), new Col(0, 0, 255))); //3
 
+//        vertexBuffer.add(new Vertex(new Point3D(400, 300, 2), new Col(67, 8, 255)));
+
         //osy
         indexBuffer.add(0);
         indexBuffer.add(1);
@@ -117,9 +121,9 @@ public class Controller3D {
         indexBuffer.add(0);
         indexBuffer.add(3);
 
-        partBuffer.add(new Part(TopologyType.LINE, 0, 2));
+        partBuffer.add(new Part(TopologyType.LINE, 0, 6));
 
-        System.out.println(vertexBuffer);
+        System.out.println(TopologyType.POINT);
     }
 
 }

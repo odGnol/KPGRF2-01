@@ -45,9 +45,7 @@ public class Renderer3D implements GPURenderer {
                     prepareTriangle(v1, v2, v3);
                 }
 
-
             } else if (topologyType == TopologyType.LINE) {
-                // doplněno
                 for (int i = index; i < index + count; i += 2) {
                     int i1 = ib.get(i);
                     int i2 = ib.get(i + 1);
@@ -57,10 +55,51 @@ public class Renderer3D implements GPURenderer {
                     prepareLine(v1, v2);
                 }
 
+            } else if (topologyType == TopologyType.POINT) {
+                for (int i = index; i < index; i++) {
+                    int i1 = ib.get(i);
+
+                    Vertex v1 = vb.get(i1);
+                    preparePoint(v1);
+                }
+
             }
         }
     }
 
+    private void preparePoint(Vertex v1) {
+        Vertex a = new Vertex(v1.getPoint().mul(model).mul(view).mul(projection), v1.getColor());
+
+        if (a.getX() > a.getW()) return; // bod je moc vpravo
+        if (a.getX() < -a.getW()) return; // moc vlevo
+        if (a.getZ() < 0) return;
+
+        if (a.getZ() < 0) {
+            return;
+        } else {
+            // vidím celý bod;
+            drawPoint(a);
+        }
+    }
+
+    private void drawPoint(Vertex a) {
+
+        // 1. dehomogenizace
+        Optional<Vertex> dA = a.dehomog();
+
+        // zahodit úsečku, pokud některý vrchol má w==0 (nelze provést dehomogenizaci)
+        if (dA.isEmpty()) return;
+
+        Vertex v1 = dA.get();
+
+        // 2. transformace do okna
+        Vec3D vec3D1 = transformToWindow(v1.getPoint());
+        Vertex aa = new Vertex(new Point3D(vec3D1), v1.getColor());
+
+        // 3. seřazení podle Y
+            //
+                drawPixel((int) aa.getX(), (int) aa.getY(), aa.getZ(), aa.getColor());
+            }
 
     private void prepareLine(Vertex v1, Vertex v2) {
         // 1. transformace vrcholů
@@ -112,8 +151,6 @@ public class Renderer3D implements GPURenderer {
     }
 
     private void drawLine(Vertex a, Vertex b) {
-        //doplněno
-
         // 1. dehomogenizace
         Optional<Vertex> dA = a.dehomog();
         Optional<Vertex> dB = b.dehomog();
@@ -199,7 +236,6 @@ public class Renderer3D implements GPURenderer {
             b = temp;
         }
         if (b.getZ() < c.getZ()) {
-//            var temp = b;
             Vertex temp = b;
             b = c;
             c = temp;

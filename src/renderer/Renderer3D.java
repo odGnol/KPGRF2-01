@@ -61,6 +61,7 @@ public class Renderer3D implements GPURenderer {
         }
     }
 
+
     private void prepareLine(Vertex v1, Vertex v2) {
         // 1. transformace vrcholů
         Vertex a = new Vertex(v1.getPoint().mul(model).mul(view).mul(projection), v1.getColor());
@@ -93,7 +94,7 @@ public class Renderer3D implements GPURenderer {
         } else if (b.getZ() < 0) {
             // vrchol A je vidět, vrchol B není
             double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
-            // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
+            // 0 -> protože ten nový vrchol (ab), který má vzniknout, bud   e mít souřadnici Z nula
 
             double t2 = (0 - a.getZ()) / (b.getZ() - a.getZ());
             Vertex vb = a.mul(t2).add(b.mul(1 - t2));
@@ -144,13 +145,13 @@ public class Renderer3D implements GPURenderer {
                 bb = temp;
             }
 
-            int yStart = Math.max(0, (int) aa.getY() + 1);
+            int yStart = Math.max(0, (int) aa.getY());
             double yEnd = Math.min(raster.getHeight() - 1, bb.getY());
             for (int y = yStart; y <= yEnd; y++) {
                 double t1 = (y - aa.getY()) / (bb.getY() - aa.getY());
                 Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
 
-                drawPixel((int) aa.getX(), (int) aa.getY(), aa.getW(), aa.getColor());
+                drawPixel((int) d.getX(), (int) d.getY(), d.getZ(), d.getColor());
             }
         } else {
             if (aa.getX() > bb.getX()) {
@@ -159,13 +160,13 @@ public class Renderer3D implements GPURenderer {
                 bb = temp;
             }
 
-            int xStart = Math.max(0, (int) aa.getX() + 1);
+            int xStart = Math.max(0, (int) aa.getX());
             double xEnd = Math.min(raster.getHeight() - 1, bb.getX());
             for (int x = xStart; x <= xEnd; x++) {
                 double t1 = (x - aa.getX()) / (bb.getX() - aa.getX());
                 Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
 
-                drawPixel((int) aa.getX(), (int) aa.getY(), aa.getW(), aa.getColor());
+                drawPixel((int) d.getX(), (int) d.getY(), d.getZ(), d.getColor());
             }
         }
     }

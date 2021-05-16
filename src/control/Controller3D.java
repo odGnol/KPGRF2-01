@@ -85,16 +85,16 @@ public class Controller3D {
                             indexBuffer = new ArrayList<>();
                             vertexBuffer = new ArrayList<>();
                             display();
-                        } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_S) {
                             camera = camera.up(posun);
                             display();
-                        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_W) {
                             camera = camera.down(posun);
                             display();
-                        } else if (e.getKeyCode() == KeyEvent.VK_A) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_D) {
                             camera = camera.left(posun);
                             display();
-                        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_A) {
                             camera = camera.right(posun);
                             display();
                         }
@@ -105,9 +105,9 @@ public class Controller3D {
 
     private void initBuffers() {
         vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));  //1
-        vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0))); //2
-        vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255))); //3
+        vertexBuffer.add(new Vertex(new Point3D(400, 0, 0), new Col(255, 0, 0)));  //1
+        vertexBuffer.add(new Vertex(new Point3D(0, 400, 0), new Col(0, 255, 0))); //2
+        vertexBuffer.add(new Vertex(new Point3D(0, 0, 400), new Col(0, 0, 255))); //3
 
         //osy
         indexBuffer.add(0);

@@ -27,6 +27,7 @@ public class Controller3D {
     private Mat4 model, projection;
     private Camera camera;
     private final double posun = 0.1;
+    private boolean perspektiva = false;
 
     public Controller3D(Panel panel) {
         this.panel = panel;
@@ -71,6 +72,9 @@ public class Controller3D {
                 0.5,
                 50
         );
+
+        perspektiva = true;
+
     }
 
     private void initListeners(Panel panel) {
@@ -86,19 +90,38 @@ public class Controller3D {
                             indexBuffer = new ArrayList<>();
                             vertexBuffer = new ArrayList<>();
 
-                        } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_W) {
                             camera = camera.up(posun);
 
-                        } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_S) {
                             camera = camera.down(posun);
 
-                        } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_A) {
                             camera = camera.left(posun);
 
-                        } else if (e.getKeyCode() == KeyEvent.VK_A) {
+                        } else if (e.getKeyCode() == KeyEvent.VK_D) {
                             camera = camera.right(posun);
 
+                        } else if (e.getKeyCode() == KeyEvent.VK_P) {
+                            if (perspektiva) {
+                                perspektiva = false;
+                                projection = new Mat4OrthoRH(
+                                        10.0,
+                                        10.0 * (imageBuffer.getHeight() / (float) imageBuffer.getWidth()),
+                                        0.5,
+                                        50
+                                );
+                            } else {
+                                perspektiva = true;
+                                projection = new Mat4PerspRH(
+                                        Math.PI / 3,
+                                        imageBuffer.getHeight() / (float) imageBuffer.getWidth(),
+                                        0.5,
+                                        50
+                                );
+                            }
                         }
+
                         display();
                     }
                 }
@@ -110,7 +133,6 @@ public class Controller3D {
         vertexBuffer.add(new Vertex(new Point3D(400, 0, 0), new Col(255, 0, 0)));  //1
         vertexBuffer.add(new Vertex(new Point3D(0, 400, 0), new Col(0, 255, 0))); //2
         vertexBuffer.add(new Vertex(new Point3D(0, 0, 400), new Col(0, 0, 255))); //3
-
 //        vertexBuffer.add(new Vertex(new Point3D(400, 300, 2), new Col(67, 8, 255)));
 
         //osy

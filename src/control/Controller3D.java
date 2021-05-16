@@ -9,7 +9,6 @@ import renderer.Renderer3D;
 import transforms.*;
 import view.Panel;
 
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,12 +129,11 @@ public class Controller3D {
 
     private void initBuffers() {
         vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(400, 0, 0), new Col(255, 0, 0)));  //1
-        vertexBuffer.add(new Vertex(new Point3D(0, 400, 0), new Col(0, 255, 0))); //2
-        vertexBuffer.add(new Vertex(new Point3D(0, 0, 400), new Col(0, 0, 255))); //3
-//        vertexBuffer.add(new Vertex(new Point3D(400, 300, 2), new Col(67, 8, 255)));
+        vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));  //1
+        vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0))); //2
+        vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255))); //3
 
-        //osy
+        //osy XYZ
         indexBuffer.add(0);
         indexBuffer.add(1);
         indexBuffer.add(0);

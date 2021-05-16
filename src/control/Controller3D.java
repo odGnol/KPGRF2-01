@@ -56,6 +56,7 @@ public class Controller3D {
 
         // necessary to manually request update of the UI
         panel.repaint();
+
     }
 
     private void initMatrices() {
@@ -178,13 +179,32 @@ public class Controller3D {
 
     private void initBuffers() {
 
-        //vrcholy pro osy XYZ(gizmo)
+        //vrcholy pro osy XYZ(gizmo) 0 - 5
         vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
         vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 255, 0)));
         vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 0, 255)));
         vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));
         vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0)));
         vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255)));
+
+        //hrany pro krychli
+
+        // zadní hrana - nahoře
+        vertexBuffer.add(new Vertex(new Point3D(1, 1, 1), new Col(2, 200, 200))); // 6
+        vertexBuffer.add(new Vertex(new Point3D(-1, 1, 1), new Col(200, 2, 200))); // 7
+
+        // přední hrana - nahoře
+        vertexBuffer.add(new Vertex(new Point3D(-1, -1, 1), new Col(200, 2, 200))); // 8
+        vertexBuffer.add(new Vertex(new Point3D(1, -1, 1), new Col(200, 200, 2))); // 9
+
+        //zadni hrana - dole
+        vertexBuffer.add(new Vertex(new Point3D(1, -1, -1), new Col(200, 200, 200))); // 10
+        vertexBuffer.add(new Vertex(new Point3D(-1, -1, -1), new Col(200, 200, 200))); // 11
+
+        //přední hrana - dole
+        vertexBuffer.add(new Vertex(new Point3D(-1, -1, -1), new Col(200, 200, 200))); // 12
+        vertexBuffer.add(new Vertex(new Point3D(1, -1, -1), new Col(200, 200, 200))); // 13
+
 
         //osy XYZ
         indexBuffer.add(0);
@@ -194,7 +214,37 @@ public class Controller3D {
         indexBuffer.add(2);
         indexBuffer.add(5);
 
+        //hrany krychle
+
+        //horní stěna
+        indexBuffer.add(6);
+        indexBuffer.add(7);
+
+        indexBuffer.add(6);
+        indexBuffer.add(9);
+
+        indexBuffer.add(7);
+        indexBuffer.add(8);
+
+        indexBuffer.add(8);
+        indexBuffer.add(9);
+
+        //dolní stěna
+        indexBuffer.add(10);
+        indexBuffer.add(11);
+
+        indexBuffer.add(11);
+        indexBuffer.add(13);
+
+        indexBuffer.add(13);
+        indexBuffer.add(12);
+
+        indexBuffer.add(12);
+        indexBuffer.add(10);
+
         partBuffer.add(new Part(TopologyType.LINE, 0, 6));
+        partBuffer.add(new Part(TopologyType.LINE, 6, 16));
+        partBuffer.add(new Part(TopologyType.TRIANGLE, 6, 4));
     }
 
 }

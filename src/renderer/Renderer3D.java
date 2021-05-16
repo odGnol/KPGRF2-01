@@ -323,29 +323,29 @@ public class Renderer3D implements GPURenderer {
         // slide 125
         // 1. for cyklus A->B
 
-        int yStart = Math.max(0, (int) aa.getY() + 1);
-        double yEnd = Math.min(raster.getHeight() - 1, bb.getY());
-        for (int y = yStart; y <= yEnd; y++) {
+        int startAB = Math.max(0, (int) aa.getY());
+        double endAB = Math.min(raster.getHeight() - 1, bb.getY());
+        for (int y = startAB; y <= endAB; y++) {
             double t1 = (y - aa.getY()) / (bb.getY() - aa.getY());
-            Vertex d = aa.mul(1 - t1).add(bb.mul(t1));
+            Vertex ab = aa.mul(1 - t1).add(bb.mul(t1));
 
             double t2 = (y - aa.getY()) / (cc.getY() - aa.getY());
-            Vertex e = aa.mul(1 - t2).add(cc.mul(t2));
-            fillLine(d, e);
+            Vertex ac = aa.mul(1 - t2).add(cc.mul(t2));
+            fillLine(ab, ac);
         }
 
         // 2. for cyklus B->C
         // doplněno
-        int startBC = Math.max(0, (int) bb.getY() + 1);
+        int startBC = Math.max(0, (int) bb.getY());
         double endBC = Math.min(raster.getWidth() - 1, cc.getY());
 
         for (int y = startBC; y <= endBC; y++) {
-            double t1 = (y - bb.getY() / bb.getY() - cc.getY());
-            Vertex d = cc.mul(1 - t1).add(bb.mul(t1));
+            double t1 = (y - cc.getY() / bb.getY() - cc.getY());
+            Vertex bc = cc.mul(1 - t1).add(bb.mul(t1));
 
-            double t2 = (y - bb.getY() / (aa.getY() - cc.getY()));
-            Vertex e = cc.mul(1 - t2).add(aa.mul(t2));
-            fillLine(d, e);
+            double t2 = (y - cc.getY() / (aa.getY() - cc.getY()));
+            Vertex ca = cc.mul(1 - t2).add(aa.mul(t2));
+            fillLine(bc, ca);
         }
     }
 

@@ -1,8 +1,6 @@
 package renderer;
 
-import model.Part;
-import model.TopologyType;
-import model.Vertex;
+import model.*;
 import rasterize.DepthBuffer;
 import rasterize.Raster;
 import transforms.*;
@@ -65,6 +63,47 @@ public class Renderer3D implements GPURenderer {
             }
         }
     }
+
+    @Override
+    public void createLineSegment(Scene scene) {
+        for (Solid solid : scene.getSolids()) {
+            List<Vertex> vb = solid.getVertexBuffer();
+            List<Integer> ib = solid.getIndexBuffer();
+            // cestovat po dvojicích
+            for (int i = 0; i < ib.size(); i += 2) {
+                Integer i1 = ib.get(i);
+                Integer i2 = ib.get(i + 1);
+//                Integer i3 = ib.get(i + 2);
+                // spojení dvou vrcholů
+                Vertex v1 = vb.get(i1);
+                Vertex v2 = vb.get(i2);
+//                Vertex v3 = vb.get(i3);
+                // vykreslí
+                prepareLine(v1,v2);
+            }
+        }
+    }
+
+    @Override
+    public void createObject(Scene scene) {
+        for (Solid solid : scene.getSolids()) {
+            List<Vertex> vb = solid.getVertexBuffer();
+            List<Integer> ib = solid.getIndexBuffer();
+            // cestovat po dvojicích
+            for (int i = 0; i < ib.size(); i += 3) {
+                Integer i1 = ib.get(i);
+                Integer i2 = ib.get(i + 1);
+                Integer i3 = ib.get(i + 2);
+                // spojení dvou vrcholů
+                Vertex v1 = vb.get(i1);
+                Vertex v2 = vb.get(i2);
+                Vertex v3 = vb.get(i3);
+                // vykreslí
+                prepareTriangle(v1,v2,v3);
+            }
+        }
+    }
+
 
     private void preparePoint(Vertex v1) {
         Vertex a = new Vertex(v1.getPoint().mul(model).mul(view).mul(projection), v1.getColor());

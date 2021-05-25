@@ -28,6 +28,8 @@ public class Controller3D {
     private int aktualniX;
     private int aktualniY;
 
+    private Scene main;
+
 //    private OsyXYZ osy;
 //    private Scene mainScene;
 
@@ -39,6 +41,8 @@ public class Controller3D {
         partBuffer = new ArrayList<>();
         indexBuffer = new ArrayList<>();
         vertexBuffer = new ArrayList<>();
+
+        main = new Scene();
 
         initMatrices();
         initListeners(panel);
@@ -53,8 +57,10 @@ public class Controller3D {
         renderer.setModel(model);
         renderer.setView(camera.getViewMatrix());
         renderer.setProjection(projection);
-        renderer.draw(partBuffer, indexBuffer, vertexBuffer);
-//        mainScene.getSolids();
+//        renderer.draw(partBuffer, indexBuffer, vertexBuffer);
+        renderer.createLineSegment(main);
+        renderer.createObject(main);
+
 
 
         // necessary to manually request update of the UI
@@ -86,7 +92,7 @@ public class Controller3D {
         panel.addKeyListener(new KeyAdapter() {
                                  public void keyPressed(KeyEvent e) {
                                      if (e.getKeyCode() == KeyEvent.VK_C) {
-                                         initBuffers();
+                                         main.getSolids().add(new Osy());
                                      } else if (e.getKeyCode() == KeyEvent.VK_E) {
                                          partBuffer = new ArrayList<>();
                                          indexBuffer = new ArrayList<>();
@@ -187,101 +193,41 @@ public class Controller3D {
 
     private void initBuffers() {
 
-        //vrcholy pro osy XYZ(gizmo) 0 - 5
-        vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 255, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 0, 255)));
-        vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255)));
+//        //vrcholy pro osy XYZ(gizmo) 0 - 5
+//        vertexBuffer.add(new Vertex(new Point3D(), new Col(255, 0, 0)));
+//        vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 255, 0)));
+//        vertexBuffer.add(new Vertex(new Point3D(), new Col(0, 0, 255)));
+//        vertexBuffer.add(new Vertex(new Point3D(1, 0, 0), new Col(255, 0, 0)));
+//        vertexBuffer.add(new Vertex(new Point3D(0, 1, 0), new Col(0, 255, 0)));
+//        vertexBuffer.add(new Vertex(new Point3D(0, 0, 1), new Col(0, 0, 255)));
+//
+//        //osy XYZ
+//        indexBuffer.add(0);
+//        indexBuffer.add(3);
+//        indexBuffer.add(1);
+//        indexBuffer.add(4);
+//        indexBuffer.add(2);
+//        indexBuffer.add(5);
+//
+//        partBuffer.add(new Part(TopologyType.LINE, 0, 6));
 
-        //osy XYZ
-        indexBuffer.add(0);
-        indexBuffer.add(3);
-        indexBuffer.add(1);
-        indexBuffer.add(4);
-        indexBuffer.add(2);
-        indexBuffer.add(5);
-
-        partBuffer.add(new Part(TopologyType.LINE, 0, 6));
-
-        //testovací 6
+        //kvádr
         //horní stěna
         //před
-        vertexBuffer.add(new Vertex(new Point3D(1, 1, 1), new Col(140, 25, 230)));
-        vertexBuffer.add(new Vertex(new Point3D(2, 1, 1), new Col(30, 258, 30)));
+        vertexBuffer.add(new Vertex(new Point3D(2, 2, 2), new Col(140, 25, 230)));
+        vertexBuffer.add(new Vertex(new Point3D(4, 2, 2), new Col(30, 258, 30)));
 
         //za
-        vertexBuffer.add(new Vertex(new Point3D(1, 1, 1), new Col(150, 230, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(-1, 1, 1), new Col(255, 25, 30)));
-
-
+        vertexBuffer.add(new Vertex(new Point3D(2, 2, -2), new Col(150, 230, 0)));
+        vertexBuffer.add(new Vertex(new Point3D(4, 3, -2), new Col(255, 25, 30)));
 
         //dolní stěna
-
         //před
-        vertexBuffer.add(new Vertex(new Point3D(-1, -1, -1), new Col(23, 25, 230)));
-        vertexBuffer.add(new Vertex(new Point3D(4, -1, -1), new Col(200, 258, 30)));
+        vertexBuffer.add(new Vertex(new Point3D(2, 0, 2), new Col(23, 25, 230)));
+        vertexBuffer.add(new Vertex(new Point3D(4, 0, -2), new Col(200, 258, 30)));
         //za
-        vertexBuffer.add(new Vertex(new Point3D(1, 1, -1), new Col(55, 230, 0)));
-        vertexBuffer.add(new Vertex(new Point3D(-1, 1, -1), new Col(255, 25, 30)));
-
-        //horní
-        indexBuffer.add(6);
-        indexBuffer.add(7);
-        indexBuffer.add(8);
-
-        indexBuffer.add(6);
-        indexBuffer.add(7);
-        indexBuffer.add(9);
-
-        //zadní
-        indexBuffer.add(8);
-        indexBuffer.add(9);
-        indexBuffer.add(13);
-
-        indexBuffer.add(9);
-        indexBuffer.add(8);
-        indexBuffer.add(12);
-
-        //pravá
-        indexBuffer.add(7);
-        indexBuffer.add(8);
-        indexBuffer.add(12);
-
-        indexBuffer.add(7);
-        indexBuffer.add(11);
-        indexBuffer.add(12);
-
-        //přední
-        indexBuffer.add(6);
-        indexBuffer.add(7);
-        indexBuffer.add(10);
-
-        indexBuffer.add(7);
-        indexBuffer.add(11);
-        indexBuffer.add(10);
-
-        //dolní
-        indexBuffer.add(10);
-        indexBuffer.add(11);
-        indexBuffer.add(13);
-
-        indexBuffer.add(10);
-        indexBuffer.add(13);
-        indexBuffer.add(12);
-
-        //levá
-        indexBuffer.add(6);
-        indexBuffer.add(9);
-        indexBuffer.add(13);
-
-        indexBuffer.add(10);
-        indexBuffer.add(6);
-        indexBuffer.add(13);
-
-        partBuffer.add(new Part(TopologyType.TRIANGLE, 6, 4));
-        partBuffer.add(new Part(TopologyType.LINE, 6, 2));
+        vertexBuffer.add(new Vertex(new Point3D(2, 2, -2), new Col(55, 230, 0)));
+        vertexBuffer.add(new Vertex(new Point3D(2, 2, -2), new Col(255, 25, 30)));
 
     }
 

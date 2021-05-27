@@ -73,11 +73,9 @@ public class Renderer3D implements GPURenderer {
             for (int i = 0; i < ib.size(); i += 2) {
                 Integer i1 = ib.get(i);
                 Integer i2 = ib.get(i + 1);
-//                Integer i3 = ib.get(i + 2);
                 // spojení dvou vrcholů
                 Vertex v1 = vb.get(i1);
                 Vertex v2 = vb.get(i2);
-//                Vertex v3 = vb.get(i3);
                 // vykreslí
                 prepareLine(v1,v2);
             }

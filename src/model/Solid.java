@@ -29,7 +29,6 @@ public class Solid {
         partBuffer.addAll(Arrays.asList(parts));
     }
 
-
     public List<Point3D> getPoints3D() {
         return points3D;
     }

@@ -25,13 +25,62 @@ public class Kvadr extends Solid {
         vertexBuffer.add(new Vertex(new Point3D(2, 2, -2), new Col(55, 230, 0))); //6
         vertexBuffer.add(new Vertex(new Point3D(2, 2, -2), new Col(255, 25, 30))); //7
 
+        //horní stěna
         indexBuffer.add(0);
-        indexBuffer.add(3);
         indexBuffer.add(1);
-        indexBuffer.add(4);
         indexBuffer.add(2);
-        indexBuffer.add(5);
 
-        addParts(new Part(TopologyType.TRIANGLE, 0, 3));
+        indexBuffer.add(0);
+        indexBuffer.add(1);
+        indexBuffer.add(3);
+
+//        //přední
+//        indexBuffer.add(0);
+//        indexBuffer.add(1);
+//        indexBuffer.add(4);
+//
+//        indexBuffer.add(0);
+//        indexBuffer.add(1);
+//        indexBuffer.add(5);
+//
+//        //pravá
+//        indexBuffer.add(1);
+//        indexBuffer.add(2);
+//        indexBuffer.add(5);
+//
+//        indexBuffer.add(1);
+//        indexBuffer.add(2);
+//        indexBuffer.add(6);
+//
+//        //levá
+//        indexBuffer.add(0);
+//        indexBuffer.add(3);
+//        indexBuffer.add(4);
+//
+//        indexBuffer.add(0);
+//        indexBuffer.add(3);
+//        indexBuffer.add(7);
+//
+//        //zadní
+//
+//        indexBuffer.add(2);
+//        indexBuffer.add(3);
+//        indexBuffer.add(6);
+//
+//        indexBuffer.add(2);
+//        indexBuffer.add(3);
+//        indexBuffer.add(7);
+//
+//        //podstava
+//
+//        indexBuffer.add(4);
+//        indexBuffer.add(5);
+//        indexBuffer.add(6);
+//
+//        indexBuffer.add(4);
+//        indexBuffer.add(5);
+//        indexBuffer.add(7);
+
+        addParts(new Part(TopologyType.TRIANGLE, 0, 2));
     }
 }

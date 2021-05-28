@@ -64,7 +64,6 @@ public class Controller3D {
         renderer.createObject(main);
 
 
-
         // necessary to manually request update of the UI
         panel.repaint();
 
@@ -97,18 +96,23 @@ public class Controller3D {
                                          axisScene.getSolids().add(new Osy());
 
                                      } else if (e.getKeyCode() == KeyEvent.VK_V) {
+                                         main.clearSolid();
+                                         wireScene.clearSolid();
                                          wireScene.getSolids().add(new Jehlan());
 
                                      } else if (e.getKeyCode() == KeyEvent.VK_X) {
+                                         main.clearSolid();
+                                         wireScene.clearSolid();
                                          main.getSolids().add(new Kvadr());
 
                                      } else if (e.getKeyCode() == KeyEvent.VK_B) {
+                                         main.clearSolid();
+                                         wireScene.clearSolid();
                                          main.getSolids().add(new JehlanPloska());
 
                                      } else if (e.getKeyCode() == KeyEvent.VK_E) {
-                                         partBuffer = new ArrayList<>();
-                                         indexBuffer = new ArrayList<>();
-                                         vertexBuffer = new ArrayList<>();
+                                         main.clearSolid();
+                                         wireScene.clearSolid();
 
                                      } else if (e.getKeyCode() == KeyEvent.VK_W) {
                                          camera = camera.up(posun);
@@ -204,7 +208,6 @@ public class Controller3D {
     }
 
     private void initBuffers() {
-
 
 
     }

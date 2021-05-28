@@ -259,66 +259,66 @@ public class Renderer3D implements GPURenderer {
         // slide 93
         // pokud nastane nějaký problém, komentovat zde
 
-            if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return; // trojúhelník je moc vpravo
-            if (a.getX() < -a.getW() && b.getX() < -b.getW() && c.getX() < -c.getW()) return; // moc vlevo
+        if (a.getX() > a.getW() && b.getX() > b.getW() && c.getX() > c.getW()) return; // trojúhelník je moc vpravo
+        if (a.getX() < -a.getW() && b.getX() < -b.getW() && c.getX() < -c.getW()) return; // moc vlevo
 
-            if (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) return;
-            if (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) return;
+        if (a.getY() < -a.getW() && b.getY() < -b.getW() && c.getY() < -c.getW()) return;
+        if (a.getY() > a.getW() && b.getY() > b.getW() && c.getY() > c.getW()) return;
 
-            if (a.getZ() > a.getW() && b.getZ() > b.getW() && c.getZ() > c.getW()) return; // daleko od nás
-            if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return; // blízko od nás
+        if (a.getZ() > a.getW() && b.getZ() > b.getW() && c.getZ() > c.getW()) return; // daleko od nás
+        if (a.getZ() < 0 && b.getZ() < 0 && c.getZ() < 0) return; // blízko od nás
 
-            // 3. seřazení podle Z
-            // slide 97
+        // 3. seřazení podle Z
+        // slide 97
 
-            if (a.getZ() < b.getZ()) {
-                Vertex temp = a;
-                a = b;
-                b = temp;
-            }
-            if (b.getZ() < c.getZ()) {
-                Vertex temp = b;
-                b = c;
-                c = temp;
-            }
-            // teď je v C vrchol, jehož Z je k nám nejblíže
-            if (a.getZ() < b.getZ()) {
-                Vertex temp = a;
-                a = b;
-                b = temp;
-            }
-            // teď máme seřazeno - Z od největšího po nejmenší: A, B, C
-
-            // 4. ořezání podle hrany Z
-            // slide 97
-            if (a.getZ() < 0) {
-                // A.Z je menší než nula => všechny Z jsou menší než nula => není co zobrazit
-            } else if (b.getZ() < 0) {
-                // vrchol A je vidět, vrcholy B,C nejsou
-                double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
-                // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
-                Vertex ab = a.mul(1 - t1).add(b.mul(t1));
-
-                double t2 = -a.getZ() / (c.getZ() - a.getZ());
-                Vertex ac = a.mul(1 - t2).add(c.mul(t2));
-
-                drawTriangle(a, ab, ac);
-
-            } else if (c.getZ() < 0) {
-                double t1 = -a.getZ() / (c.getZ() - a.getZ());
-                Vertex ac = a.mul(1 - t1).add(c.mul(t1));
-
-                double t2 = -b.getZ() / (c.getZ() - b.getZ());
-                Vertex bc = b.mul(1 - t2).add(c.mul(t2));
-
-                drawTriangle(a, b, bc);
-                drawTriangle(a, ac, bc);
-
-            } else {
-                // vidím celý trojúhelník
-                drawTriangle(a, b, c);
-            }
+        if (a.getZ() < b.getZ()) {
+            Vertex temp = a;
+            a = b;
+            b = temp;
         }
+        if (b.getZ() < c.getZ()) {
+            Vertex temp = b;
+            b = c;
+            c = temp;
+        }
+        // teď je v C vrchol, jehož Z je k nám nejblíže
+        if (a.getZ() < b.getZ()) {
+            Vertex temp = a;
+            a = b;
+            b = temp;
+        }
+        // teď máme seřazeno - Z od největšího po nejmenší: A, B, C
+
+        // 4. ořezání podle hrany Z
+        // slide 97
+        if (a.getZ() < 0) {
+            // A.Z je menší než nula => všechny Z jsou menší než nula => není co zobrazit
+        } else if (b.getZ() < 0) {
+            // vrchol A je vidět, vrcholy B,C nejsou
+            double t1 = (0 - a.getZ()) / (b.getZ() - a.getZ());
+            // 0 -> protože ten nový vrchol (ab), který má vzniknout, bude mít souřadnici Z nula
+            Vertex ab = a.mul(1 - t1).add(b.mul(t1));
+
+            double t2 = -a.getZ() / (c.getZ() - a.getZ());
+            Vertex ac = a.mul(1 - t2).add(c.mul(t2));
+
+            drawTriangle(a, ab, ac);
+
+        } else if (c.getZ() < 0) {
+            double t1 = -a.getZ() / (c.getZ() - a.getZ());
+            Vertex ac = a.mul(1 - t1).add(c.mul(t1));
+
+            double t2 = -b.getZ() / (c.getZ() - b.getZ());
+            Vertex bc = b.mul(1 - t2).add(c.mul(t2));
+
+            drawTriangle(a, b, bc);
+            drawTriangle(a, ac, bc);
+
+        } else {
+            // vidím celý trojúhelník
+            drawTriangle(a, b, c);
+        }
+    }
 
 
     private void drawTriangle(Vertex a, Vertex b, Vertex c) {
@@ -378,15 +378,14 @@ public class Renderer3D implements GPURenderer {
 
         // 2. for cyklus B->C
         // doplněno - čáry přes/výpadek
-        int xStart = Math.max(0, (int) cc.getY() + 1);
-        double xEnd = Math.min(raster.getWidth() - 1, bb.getY());
+        int xStart = Math.max(0, (int)bb.getY() + 1);
+        double xEnd = Math.min(raster.getWidth() - 1, cc.getY());
+        for (int y = xStart; y <= xEnd; y++) {
+            double t1 = (y - bb.getY()) / (cc.getY() - bb.getY());
+            Vertex bc = bb.mul(1 - t1).add(cc.mul(t1));
 
-        for (int yy = xStart; yy <= xEnd; yy++) {
-            double t3 = (yy - bb.getY() / cc.getY() - bb.getY());
-            Vertex bc = bb.mul(1 - t3).add(cc.mul(t3));
-
-            double t4 = (yy - cc.getY()/(aa.getY() - cc.getY()));
-            Vertex ca = cc.mul(1 - t4).add(aa.mul(t4));
+            double t2 = (y - aa.getY()) / (cc.getY() - aa.getY());
+            Vertex ca = aa.mul(1 - t2).add(cc.mul(t2));
             fillLine(bc, ca);
         }
 
